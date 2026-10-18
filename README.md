@@ -2,9 +2,9 @@
 
 **Design in real code, without writing it.**
 
-UxFold Lab is a free Mac app for designers. You open a real website or web app, see it running live, and change it by pointing at things and saying what you want. A coding agent you already use (Claude Code, Codex or OpenCode) writes the code. You stay in charge of the design: every change is listed, and any change can be undone.
+UxFold Lab is a free Mac app for designers. You open a real website or web app, see it running live, and change it by pointing at things and saying what you want. A coding agent you already use (Claude Code, Codex or OpenCode) writes the code. You stay in charge of the design: every change goes through your agent's chat, where you can read it first, and any change can be undone.
 
-**[Download UxFold Lab for Mac](https://github.com/uxfold/UxFold-Lab-Latest/releases/latest/download/UxFold-Lab.dmg)** (version 1.0.0, Apple Silicon and Intel, macOS 13 or later)
+**[Download UxFold Lab for Mac](https://github.com/uxfold/UxFold-Lab-Latest/releases/latest/download/UxFold-Lab.dmg)** (version 1.1.0, Apple Silicon and Intel, macOS 13 or later)
 
 ---
 
@@ -16,7 +16,7 @@ UxFold Lab is a free Mac app for designers. You open a real website or web app, 
 - [Your first 5 minutes](#your-first-5-minutes)
 - [The workspace at a glance](#the-workspace-at-a-glance)
 - [Three ways to change a design](#three-ways-to-change-a-design)
-- [Changes and Undo](#changes-and-undo)
+- [Undo and token cleanup](#undo-and-token-cleanup)
 - [Starting a project](#starting-a-project)
 - [More tools](#more-tools)
 - [Keyboard shortcuts](#keyboard-shortcuts)
@@ -34,10 +34,10 @@ UxFold Lab is a free Mac app for designers. You open a real website or web app, 
 Design tools draw pictures of a product. Code is the product. UxFold Lab puts you in front of the real thing, so what you change is what ships.
 
 - **See it live.** Your project runs inside the app, at any screen size, exactly as a browser shows it.
-- **Change the whole look in seconds.** Drag colours, fonts, spacing and corner radius in the Tokens panel. The page updates as you drag. No AI, no waiting.
+- **Change the whole look in seconds.** Type or nudge colours, spacing, sizes and corner radius in the Tokens panel, for every use of a token or for one element. No AI, no waiting.
 - **Point and describe.** Click a button and type "make this bigger and friendlier". Your agent edits the right file and you watch the result appear.
-- **Change many things at once.** Pick several elements and give one instruction, such as "make these cards match".
-- **Nothing is final.** Every edit lands in the Changes panel with its own Undo.
+- **Change many things at once.** Pick several elements, and Lab puts them in your agent's chat for one instruction, such as "make these cards match".
+- **Nothing is final.** Undo (Cmd+Z) steps back the last change, and Lab keeps a list of your token edits for your agent to tidy up.
 - **Your agent, your account.** Lab drives the coding agent you already have. It does not resell AI or need another subscription.
 
 ---
@@ -94,11 +94,11 @@ It should print `UxFold-Lab.dmg: OK`. Anything else means the download is damage
 
 1. **Create a project.** On the home screen click **New Project**, give it a name and keep the defaults (Next.js and shadcn/ui). Click **Create**. Lab copies the Welcome starter and installs it, which takes about a minute.
 2. **Look around.** The preview opens on a page called "Welcome to UxFold". Use the sidebar inside the page to visit Dashboard and Settings. These pages are there for you to practise on.
-3. **Try Tokens.** Open the Tokens panel and drag a colour, the font size or the corner radius. The whole page changes at once.
-4. **Try Tune.** Turn **Select** on in the preview toolbar and choose **Tune**. Click the "Try it" card and type "make this card bigger". Your agent edits the code and the preview updates. Press **Esc** to stop selecting.
-5. **Undo it.** Open the **Changes** panel. Your edit is listed there. Click **Undo**.
+3. **Try Tokens.** Turn **Select** on in the preview toolbar, choose **Tokens** and click a card. Type a new padding or pick another spacing token, and the page updates.
+4. **Try Describe.** Choose **Describe**, click two or three elements, then click **Confirm** in the tray. Lab puts them in your agent's chat, ready for you to finish the "Change:" line and press Enter. Press **Esc** to stop selecting.
+5. **Undo it.** Press **Cmd+Z** (or Undo in the preview toolbar) to step back the last change.
 
-Then try **Describe**: pick several elements and give one instruction for all of them.
+Then try **Tune**: click one element and type what you want; it goes straight to your agent.
 
 ---
 
@@ -108,7 +108,7 @@ When you open a project, you see:
 
 - **The preview** in the middle: your project running live. The toolbar above it holds the **Select** button, the page picker, screen sizes and refresh.
 - **The agent** on one side: a terminal running your coding agent inside the project. You can also talk to it directly here.
-- **Panels** such as Tokens, Changes, Edit and Elements. Drag any panel by its header to put it on either side of the preview, stack it with another panel, or float it as its own window. Lab remembers your layout for each project.
+- **Panels** such as Tokens, Edit and Elements. Drag any panel by its header to put it on either side of the preview, stack it with another panel, or float it as its own window. Lab remembers your layout for each project.
 - **The sidebar** on the left: your projects, so you can jump between them. Projects you leave keep running in the background, so coming back is instant.
 
 ---
@@ -117,38 +117,43 @@ When you open a project, you see:
 
 All three start from the **Select** button in the preview toolbar. When Select is off, the preview behaves like a normal browser: links, menus and forms work. Turn Select on to pick elements instead. Press **Esc** at any time to turn it off.
 
-### Tokens: dial the design system by hand
+### Tokens: an inspector for the selected element
 
-Design tokens are the named values a project uses everywhere: its colours, fonts, text sizes, spacing and corner radius. The **Tokens** panel finds them in your project's CSS and gives each one a control: colour pickers, sliders and number fields.
+Design tokens are the named values a project uses everywhere: its colours, fonts, text sizes, spacing and corner radius. Choose **Tokens** under Select and click an element. The **Tokens** panel shows:
 
-- Drag a control and the page updates live.
-- Let go and Lab writes the new value into the exact line of the file it came from. Nothing else in the file changes.
-- No AI is involved, so this is instant and costs nothing.
-- Choose **Tokens** under Select and click an element to see only the tokens that element uses.
+- **The element's path** at the top, for example `body › main › div.card › div.card-body`. Click any part to select that element instead (handy when a click lands on an inner box).
+- **One toggle: All uses | This element only.** All uses changes the token itself, so everything built on it follows. This element only changes just the selected element, in its own source file.
+- **Element tab:** the element's values in sections (Spacing, Typography, Fill, Border), one line each: the property, the token it uses, and its value.
+- **All tokens tab:** the tokens this element uses, then every token in the project, by type and file.
+
+On each row you can:
+
+- **Type a value** and press Enter (Esc cancels). Up and Down nudge it by 1, Shift by 10, keeping its unit.
+- **Pick another token** from the token field. It only offers tokens of the same type (spacing for padding, colours for backgrounds), each with its value.
+- **Use the nearest token**: after a value that is no token, "Nearest: spacing-3 · 12px" offers the closest one.
+
+Values set by a library (for example daisyUI's own variables) show a small lock: changes to them always apply to this element only. Search finds rows by property, token name or value, and in All tokens also by purpose ("padding" finds spacing tokens). No AI is involved, so this is instant and costs nothing.
 
 In the Welcome starter, every colour, font, size, space and radius is a token in `src/tokens/tokens.css`, with a light theme and a dark theme. Change a token and the whole app follows.
 
+### Describe: pick elements, then write in your agent's chat
+
+**Describe** is the default mode. Click elements and each one is added to a small tray at the top right of the preview, showing its component and file. Click **Confirm** and Lab puts a short list of them in your agent's chat ("I'm talking about these elements: … Change:"). It does not send: you finish the instruction there and press Enter, so you always see what goes to the agent.
+
 ### Tune: click one element, describe a change
 
-Choose **Tune** under Select, click one element and type what you want: "make this button bigger", "use the accent colour here", "add a subtitle under this heading". Lab tells your agent exactly which element you mean, in which file and on which line, so the agent edits the right place instead of guessing. The preview updates when the agent is done.
-
-### Describe: pick several elements, give one instruction
-
-Choose **Describe** under Select and click several elements. Each one is collected as a chip. Then write one instruction for all of them, such as "make these three cards the same height" or "give all of these the same spacing". Good for keeping things consistent.
+Choose **Tune** under Select, click one element and type what you want: "make this button bigger", "use the accent colour here", "add a subtitle under this heading". Lab sends it to your agent's chat with the element's component, file and line, so the agent edits the right place instead of guessing.
 
 ---
 
-## Changes and Undo
+## Undo and token cleanup
 
-Every Tune or Describe request becomes an entry in the **Changes** panel:
-
-- what you asked for, and which elements it was about,
-- what the agent says it did, and which files it changed,
-- an **Undo** button for that change on its own.
-
-You can reply to an entry to keep refining the same change. If a file has been changed again since, Undo refuses rather than overwrite newer work, and tells you why.
+- **Undo** (Cmd+Z, or the Undo button in the preview toolbar and at the bottom of the Agent panel) steps back the last change.
+- **Token cleanup.** Lab records every edit you make in the Tokens panel. Custom values (like `13px` instead of a token) are marked, with the nearest token. When you close Tokens, Lab offers to **Send to chat**: it puts a cleanup brief in your agent's input asking it to turn custom values into tokens or existing token classes without changing how anything looks. **Later** keeps the list; a reminder appears when you open Tokens or the project again, with **Discard** if you don't want it. The list lives in `.uxfold/pending-token-changes.json`, which Lab keeps out of git.
 
 ---
+
+## Starting a project---
 
 ## Starting a project
 
@@ -233,7 +238,7 @@ Your projects are ordinary folders of code. You can open them in any editor, and
 
 **The preview stays blank.** Click refresh in the preview toolbar. If the project's dev server failed to start, its output appears in the dev server panel with the error.
 
-**My agent changed the wrong thing.** Click **Undo** on that entry in the Changes panel, then try again with a more specific request, or select the exact element with Tune.
+**My agent changed the wrong thing.** Press **Cmd+Z** to undo, then try again with a more specific request, or pick the exact element with the path at the top of the Tokens panel or with Tune.
 
 ---
 
@@ -242,6 +247,7 @@ Your projects are ordinary folders of code. You can open them in any editor, and
 - **Unsigned app.** macOS asks once before opening it (see [Install](#install)). There are no automatic updates yet; download new versions from the [releases page](https://github.com/uxfold/UxFold-Lab-Latest/releases).
 - **Mac only.** There is no Windows or Linux version yet.
 - **Lists in the visual editor.** Copying or duplicating an element that sits inside a repeated list (for example a table row) can write broken code. Describing a change on those elements with Tune works.
+- **This element only** works on elements that have their own ID in source. An element rendered inside a component is refused; pick its parent in the path instead. Repeated elements (items in a list) share one ID, so they change together.
 - **Tokens limits.** The Tokens panel only reads `.css` files. Variables set in JavaScript, Sass, Less or `<style>` blocks are not listed, and a token value must fit on one line. When the same token is defined in several files or inside a media query, Tokens can pick the wrong definition to edit.
 - **Team comments** travel on a git branch named `shipstudio-team`, from the app UxFold Lab is based on.
 - **OpenCode users of earlier builds** may see an old `shipstudio-preview` tool next to `uxfold-preview`. Remove the old one from OpenCode's config.
